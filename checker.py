@@ -8,7 +8,7 @@ endingpunctuation = set(".!?")
 minsyl = 14
 maxsyl = 18
 minrelfreq = 2/3
-maxrelfreq = 4/3
+maxrelfreq = 3/2
 mincommacount = 10
 minmidpunctcount = 10
 
@@ -38,7 +38,7 @@ with open("cmudict/cmudict.phones") as f:
 for i in glob.glob("*.txt"):
     print(f"checking {i}")
     with open(i) as f:
-        lines = f.read().splitlines()
+        lines = [j for j in f.read().splitlines() if j]
     if len(lines) % batchsize != 0:
         print(f"! last batch only has {len(lines) % batchsize} sentences")
     for j in range(math.ceil(len(lines)/batchsize)):
@@ -63,10 +63,8 @@ for i in glob.glob("*.txt"):
                 if l == "[UNK]":
                     print(f"! - unknown word in line {lineno}: \"{sentence}\"")
                     break
-                elif l[-1] in ("0", "1", "2"):
+                elif l[-1] in "012" or l in punctuation:
                     sylcount += 1
-                elif l in ".,!?;":
-                    sylcount += 2
             if not (minsyl <= sylcount <= maxsyl):
                 sylgood = False
                 print(f"! - syllable count in line {lineno} is {sylcount}: \"{sentence}\"")
@@ -79,9 +77,10 @@ for i in glob.glob("*.txt"):
         for k in phonemes:
             phonemecounts[k] = batchchain.count(k)
         phonemefreqs = {k[0]: k[1] / len(batchchain) for k in phonemecounts.items()}
-        phonemefreqsrelative =  {k[0]: k[1] / goalfreqs[k[0]] for k in phonemefreqs.items()}
+        phonemefreqsrelative = {k[0]: k[1] / goalfreqs[k[0]] for k in phonemefreqs.items()}
         notrepresented = []
         underrepresented = []
+        underrepresented2 = []
         overrepresented = []
         for k in phonemefreqsrelative:
             if phonemefreqsrelative[k] < minrelfreq:
@@ -89,15 +88,25 @@ for i in glob.glob("*.txt"):
                     underrepresented.append((k, phonemefreqsrelative[k]))
                 else:
                     notrepresented.append(k)
-            if phonemefreqsrelative[k] > maxrelfreq:
-                if phonemecounts[k] > 2: # else some phonemes (e.g. `OY2`) wouldn't be allowed to be represented at all
+            elif k[-1] not in "012" and phonemecounts[k] == 1:
+                underrepresented2.append(k)
+            elif phonemefreqsrelative[k] > maxrelfreq:
+                if phonemecounts[k] > 4: # else some phonemes (e.g. `OY2`) wouldn't be allowed to be represented at all
                     overrepresented.append((k, phonemefreqsrelative[k]))
         if notrepresented:
-            print(f"! - these phonemes are not represented: {', '.join(notrepresented)}")
+            print(f"! - these phonemes are not represented: {', '.join(sorted(notrepresented))}")
+        if underrepresented2:
+            print(f"! - these consonants are only represented once: {', '.join(sorted(notrepresented))}")
         if underrepresented:
             print(f"! - these phonemes are underrepresented: {', '.join(f'{k[0]} ({k[1]:.3f})' for k in sorted(underrepresented, key = lambda a: a[1]))}")
         if overrepresented:
             print(f"! - these phonemes are overrepresented: {', '.join(f'{k[0]} ({k[1]:.3f})' for k in sorted(overrepresented, key = lambda a: a[1], reverse = True))}")
+            print("- - here are some sentences containing them:")
+            for k in overrepresented:
+                print(f"- - - {k[0]}")
+                for l in range(len(batch)):
+                    if k[0] in batch[l]:
+                        print(f"- - - {batchpre[l]}")
         if not notrepresented and not underrepresented and not overrepresented:
             print("- - representation check passed")
             pfrs = sorted(phonemefreqsrelative.items(), key = lambda a: a[1])
