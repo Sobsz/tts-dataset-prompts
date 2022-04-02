@@ -4,7 +4,7 @@ This repository aims to be a decent set of sentences for people looking to clone
 
 Each set of 50 lines aims to fulfill the following criteria:
 - each phoneme is represented at least once, according to [CMUdict](https://github.com/cmusphinx/cmudict) (differently-stressed versions of vowels count as separate phonemes)
-- [TODO] ~~each phoneme is roughly as frequent as in regular speech (between `0.66x` and `1.33x + 1`, where `x` is the value in `phoneme_freqs.txt`)~~
+- each phoneme is roughly as frequent as in regular speech (between 2/3 and 4/3 the frequency present in [Moby Dick](https://www.gutenberg.org/files/15/15-0.txt), unless the phoneme is only present 2 or fewer times in the batch)
 - every line is of roughly equal length when spoken (14-18 syllables, where non-ending punctuation counts as 2 syllables)
 - words with context-dependent pronunciations (except very common ones, such as `the`) are avoided for ease of processing
 - at least 10 lines contain commas

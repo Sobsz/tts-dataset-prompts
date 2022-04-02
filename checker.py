@@ -7,6 +7,8 @@ batchsize = 50
 endingpunctuation = set(".!?")
 minsyl = 14
 maxsyl = 18
+minrelfreq = 2/3
+maxrelfreq = 4/3
 mincommacount = 10
 minmidpunctcount = 10
 
@@ -18,6 +20,11 @@ with open("cmudict/cmudict.dict") as f:
         i = i.partition(" #")[0].split(" ")
         if i[0][-1] != ")":
             cmudict[i[0]] = i[1:]
+
+with open("frequencies.tsv") as f:
+    goalfreqstemp = [i.split("\t") for i in f.read().splitlines()]
+goalfreqssum = sum([int(i[1]) for i in goalfreqstemp])
+goalfreqs = {i[0]: int(i[1])/goalfreqssum for i in goalfreqstemp}
 
 phonemes = set()
 with open("cmudict/cmudict.phones") as f:
@@ -64,23 +71,38 @@ for i in glob.glob("*.txt"):
                 sylgood = False
                 print(f"! - syllable count in line {lineno} is {sylcount}: \"{sentence}\"")
         if sylgood:
-            print("- - syllable count check successful")
+            print("- - syllable count check passed")
 
         batchchain = list(itertools.chain.from_iterable(batch))
-        
-        missingphonemes = phonemes.difference(batchchain)
-        if missingphonemes:
-            print(f"! - the following phonemes are not represented: {', '.join(sorted(missingphonemes))}")
-        else:
-            print("- - phoneme coverage check successful")
 
         phonemecounts = {}
         for k in phonemes:
             phonemecounts[k] = batchchain.count(k)
-        report = [f"{k[0]} ({k[1]})" for k in sorted(phonemecounts.items(), key = lambda a: a[1])[:10]]
-        print(f"- - least represented phonemes: {', '.join(report)}")
-        
-
+        phonemefreqs = {k[0]: k[1] / len(batchchain) for k in phonemecounts.items()}
+        phonemefreqsrelative =  {k[0]: k[1] / goalfreqs[k[0]] for k in phonemefreqs.items()}
+        notrepresented = []
+        underrepresented = []
+        overrepresented = []
+        for k in phonemefreqsrelative:
+            if phonemefreqsrelative[k] < minrelfreq:
+                if phonemefreqsrelative[k]:
+                    underrepresented.append((k, phonemefreqsrelative[k]))
+                else:
+                    notrepresented.append(k)
+            if phonemefreqsrelative[k] > maxrelfreq:
+                if phonemecounts[k] > 2: # else some phonemes (e.g. `OY2`) wouldn't be allowed to be represented at all
+                    overrepresented.append((k, phonemefreqsrelative[k]))
+        if notrepresented:
+            print(f"! - these phonemes are not represented: {', '.join(notrepresented)}")
+        if underrepresented:
+            print(f"! - these phonemes are underrepresented: {', '.join(f'{k[0]} ({k[1]:.3f})' for k in sorted(underrepresented, key = lambda a: a[1]))}")
+        if overrepresented:
+            print(f"! - these phonemes are overrepresented: {', '.join(f'{k[0]} ({k[1]:.3f})' for k in sorted(overrepresented, key = lambda a: a[1], reverse = True))}")
+        if not notrepresented and not underrepresented and not overrepresented:
+            print("- - representation check passed")
+            pfrs = sorted(phonemefreqsrelative.items(), key = lambda a: a[1])
+            print(f"- - closest to underrepresentation: {', '.join(f'{k[0]} ({k[1]:.3f})' for k in pfrs[:5])}")
+            print(f"- - closest to overrepresentation: {', '.join(f'{k[0]} ({k[1]:.3f})' for k in pfrs[:-5:-1])}")
         commacount = 0
         midpunctcount = 0
         for k in batch:
@@ -89,11 +111,11 @@ for i in glob.glob("*.txt"):
             if not endingpunctuation.isdisjoint(k[:-1]):
                 midpunctcount += 1
         if commacount >= mincommacount:
-            print("- - comma count check successful")
+            print("- - comma count check passed")
         else:
             print(f"! - not enough commas, {mincommacount - commacount} more required")
         if midpunctcount >= minmidpunctcount:
-            print("- - mid-line punctuation count check successful")
+            print("- - mid-line punctuation count check passed")
         else:
             print(f"! - not enough mid-line punctuation, {minmidpunctcount - midpunctcount} more required")
 
