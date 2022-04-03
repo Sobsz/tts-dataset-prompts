@@ -98,20 +98,20 @@ for i in glob.glob("*.txt"):
         if underrepresented2:
             print(f"! - these consonants are only represented once: {', '.join(sorted(notrepresented))}")
         if underrepresented:
-            print(f"! - these phonemes are underrepresented: {', '.join(f'{k[0]} ({k[1]:.3f})' for k in sorted(underrepresented, key = lambda a: a[1]))}")
+            print(f"! - these phonemes are underrepresented: {', '.join(f'{k[0]} ({k[1]:.3f}, {phonemecounts[k[0]]})' for k in sorted(underrepresented, key = lambda a: a[1]))}")
         if overrepresented:
-            print(f"! - these phonemes are overrepresented: {', '.join(f'{k[0]} ({k[1]:.3f})' for k in sorted(overrepresented, key = lambda a: a[1], reverse = True))}")
+            print(f"! - these phonemes are overrepresented: {', '.join(f'{k[0]} ({k[1]:.3f}, {phonemecounts[k[0]]})' for k in sorted(overrepresented, key = lambda a: a[1], reverse = True))}")
             print("- - here are some sentences containing them:")
             for k in overrepresented:
                 print(f"- - - {k[0]}")
                 for l in range(len(batch)):
                     if k[0] in batch[l]:
                         print(f"- - - {batchpre[l]}")
-        if not notrepresented and not underrepresented and not overrepresented:
+        if not notrepresented and not underrepresented and not underrepresented2 and not overrepresented:
             print("- - representation check passed")
             pfrs = sorted(phonemefreqsrelative.items(), key = lambda a: a[1])
-            print(f"- - closest to underrepresentation: {', '.join(f'{k[0]} ({k[1]:.3f})' for k in pfrs[:5])}")
-            print(f"- - closest to overrepresentation: {', '.join(f'{k[0]} ({k[1]:.3f})' for k in pfrs[:-5:-1])}")
+            print(f"- - closest to underrepresentation: {', '.join(f'{k[0]} ({k[1]:.3f}, {phonemecounts[k[0]]})' for k in pfrs[:5])}")
+            print(f"- - closest to overrepresentation: {', '.join(f'{k[0]} ({k[1]:.3f}, {phonemecounts[k[0]]})' for k in pfrs[:-11:-1])}")
         commacount = 0
         midpunctcount = 0
         for k in batch:
