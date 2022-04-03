@@ -10,4 +10,11 @@ Each set of 50 lines aims to fulfill the following criteria:
 - at least 10 lines contain commas
 - at least 10 lines are made up of multiple shorter sentences (so that the AI learns to pause naturally)
 
-Additional text files are provided for question and exclamation prompts, following the same rules. They have been separated because some text-to-speech architectures deal poorly with ending punctuation that affects the intonation of the whole sentence. It may be beneficial to use these to train a separate model, as recommended by [TALQu](https://utaforum.net/threads/talqu-an-unofficial-english-guide-thread-on-talqu-and-its-voice-model-creation.23552/) and as done for some voices in the Mekatron service (defunct).
+Additional text files will be provided for question and exclamation prompts, following the same rules. They have been separated because some text-to-speech architectures deal poorly with ending punctuation that affects the intonation of the whole sentence. It may be beneficial to use these to train a separate model, as recommended by [TALQu](https://utaforum.net/threads/talqu-an-unofficial-english-guide-thread-on-talqu-and-its-voice-model-creation.23552/) and as done for some voices in the Mekatron service (defunct).
+
+## Other good prompt sets
+- [Microsoft CustomVoice example scripts (multilingual)](https://github.com/Azure-Samples/Cognitive-Speech-TTS/tree/master/CustomVoice/script) (not all of the prompt lists are well designed, e.g. [the en-US chat prompts](https://github.com/Azure-Samples/Cognitive-Speech-TTS/blob/master/CustomVoice/script/English%20(United%20States)_enUS/3000000001-3000000300_Chat.txt) only include /ʒ/ as part of the word "Indonesia")
+- [CMU Arctic prompt list](http://festvox.org/cmu_arctic/cmuarctic.data) (phonetically balanced, but only one sentence per line)
+- [MOCHA-TIMIT](https://data.cstr.ed.ac.uk/mocha/mocha-timit.txt) ("designed to include the main connected speech processes in English (eg. assimilations, weak forms ..)")
+- [LJSpeech transcript](https://github.com/NVIDIA/tacotron2/blob/master/filelists/ljs_audio_text_train_filelist.txt) (sentence fragments abound, which I think of as useful)
+- [Harvard sentences](https://www.cs.columbia.edu/~hgs/audio/harvard.html) (phonetically balanced, but only one sentence per line and they're all equal length)
