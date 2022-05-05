@@ -1,3 +1,4 @@
+from g2p_en import G2p
 import glob
 import itertools
 import math
@@ -7,33 +8,20 @@ batchsize = 50
 endingpunctuation = set(".!?")
 minsyl = 14
 maxsyl = 18
-minrelfreq = 2/3
+minrelfreq = 1/2
 maxrelfreq = 3/2
 mincommacount = 10
 minmidpunctcount = 10
 
+phonemes = set(("AA0", "AA1", "AA2", "AE0", "AE1", "AE2", "AH0", "AH1", "AH2", "AO0", "AO1", "AO2", "AW0", "AW1", "AW2", "AY0", "AY1", "AY2", "B", "CH", "D", "DH", "EH0", "EH1", "EH2", "ER0", "ER1", "ER2", "EY0", "EY1", "EY2", "F", "G", "HH", "IH0", "IH1", "IH2", "IY0", "IY1", "IY2", "JH", "K", "L", "M", "N", "NG", "OW0", "OW1", "OW2", "OY0", "OY1", "OY2", "P", "R", "S", "SH", "T", "TH", "UH0", "UH1", "UH2", "UW0", "UW1", "UW2", "V", "W", "Y", "Z", "ZH"))
 punctuation = endingpunctuation.union(",")
-
-cmudict = {}
-with open("cmudict/cmudict.dict") as f:
-    for i in f.read().splitlines():
-        i = i.partition(" #")[0].split(" ")
-        if i[0][-1] != ")":
-            cmudict[i[0]] = i[1:]
 
 with open("frequencies.tsv") as f:
     goalfreqstemp = [i.split("\t") for i in f.read().splitlines()]
 goalfreqssum = sum([int(i[1]) for i in goalfreqstemp])
 goalfreqs = {i[0]: int(i[1])/goalfreqssum for i in goalfreqstemp}
 
-phonemes = set()
-with open("cmudict/cmudict.phones") as f:
-    for i in f.read().splitlines():
-        i = i.split("\t")
-        if i[1] == "vowel":
-            phonemes.update((i[0]+"0", i[0]+"1", i[0]+"2"))
-        else:
-            phonemes.add(i[0])
+g2p = G2p()
 
 for i in glob.glob("*.txt"):
     print(f"checking {i}")
@@ -44,11 +32,7 @@ for i in glob.glob("*.txt"):
     for j in range(math.ceil(len(lines)/batchsize)):
         print(f"- batch {j+1}")
         batchpre = lines[j*50 : min((j+1)*batchsize, len(lines))]
-        batch = []
-        for k in batchpre:
-            split = re.findall(r"[\w']+|[.,!?;]", k.lower())
-            split = [cmudict.get(l, [l] if l in punctuation else ["[UNK]"]) for l in split]
-            batch.append(list(itertools.chain.from_iterable(split)))
+        batch = [g2p(k) for k in batchpre]
 
         sylgood = True
         for k in range(len(batch)):
@@ -60,10 +44,7 @@ for i in glob.glob("*.txt"):
                 sylgood = False
                 continue
             for l in batch[k][:-1]:
-                if l == "[UNK]":
-                    print(f"! - unknown word in line {lineno}: \"{sentence}\"")
-                    break
-                elif l[-1] in "012" or l in punctuation:
+                if l[-1] in "012" or l in punctuation:
                     sylcount += 1
             if not (minsyl <= sylcount <= maxsyl):
                 sylgood = False
