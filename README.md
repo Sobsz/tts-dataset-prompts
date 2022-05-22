@@ -16,6 +16,7 @@ This repo uses the [g2p-en](https://pypi.org/project/g2p-en/) library to determi
 
 ## Other good prompt sets
 - [Microsoft CustomVoice example scripts (multilingual)](https://github.com/Azure-Samples/Cognitive-Speech-TTS/tree/master/CustomVoice/script) (not all of the prompt lists are well designed, e.g. [the en-US chat prompts](https://github.com/Azure-Samples/Cognitive-Speech-TTS/blob/master/CustomVoice/script/English%20(United%20States)_enUS/3000000001-3000000300_Chat.txt) only include /ʒ/ as part of the word "Indonesia")
+- [Rainbow Passage](https://dailycues.com/learn/iqpedia/pages/rainbow-passage/) and [Grandfather Passage](https://dailycues.com/learn/iqpedia/pages/grandfather-passage/) (phonetically complete)
 - [CMU Arctic prompt list](http://festvox.org/cmu_arctic/cmuarctic.data) (phonetically balanced, but only one sentence per line)
 - [MOCHA-TIMIT](https://data.cstr.ed.ac.uk/mocha/mocha-timit.txt) ("designed to include the main connected speech processes in English (eg. assimilations, weak forms ..)")
 - [LJSpeech transcript](https://github.com/NVIDIA/tacotron2/blob/master/filelists/ljs_audio_text_train_filelist.txt) (sentence fragments abound, which I think of as useful)
