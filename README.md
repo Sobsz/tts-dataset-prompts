@@ -19,5 +19,6 @@ This repo uses the [g2p-en](https://pypi.org/project/g2p-en/) library to determi
 - [Rainbow Passage](https://dailycues.com/learn/iqpedia/pages/rainbow-passage/) and [Grandfather Passage](https://dailycues.com/learn/iqpedia/pages/grandfather-passage/) (phonetically complete)
 - [CMU Arctic prompt list](http://festvox.org/cmu_arctic/cmuarctic.data) (phonetically balanced, but only one sentence per line)
 - [MOCHA-TIMIT](https://data.cstr.ed.ac.uk/mocha/mocha-timit.txt) ("designed to include the main connected speech processes in English (eg. assimilations, weak forms ..)")
+- (multilingual!) [Common Voice sentences](https://github.com/common-voice/common-voice/blob/main/server/data/en/sentence-collector.txt) (not at all phonetically balanced, also quite short)
 - [LJSpeech transcript](https://github.com/NVIDIA/tacotron2/blob/master/filelists/ljs_audio_text_train_filelist.txt) (sentence fragments abound, which I personally think of as useful)
 - [Harvard sentences](https://www.cs.columbia.edu/~hgs/audio/harvard.html) (phonetically balanced, but only one sentence per line and they're all equal length)
