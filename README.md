@@ -22,3 +22,4 @@ This repo uses the [g2p-en](https://pypi.org/project/g2p-en/) library to determi
 - (multilingual!) [Common Voice sentences](https://github.com/common-voice/common-voice/blob/main/server/data/en/sentence-collector.txt) (not at all phonetically balanced, also quite short)
 - [LJSpeech transcript](https://github.com/NVIDIA/tacotron2/blob/master/filelists/ljs_audio_text_train_filelist.txt) (sentence fragments abound, which I personally think of as useful)
 - [Harvard sentences](https://www.cs.columbia.edu/~hgs/audio/harvard.html) (phonetically balanced, but only one sentence per line and they're all equal length)
+- [the VITS-fast-fine-tuning list](https://github.com/Plachtaa/VITS-fast-fine-tuning/blob/main/user_voice/user_voice.txt) (both English and Chinese, but very short sentences and the grammar isn't perfect)
