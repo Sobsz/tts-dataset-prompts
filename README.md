@@ -1,5 +1,7 @@
 # tts-dataset-prompts
- 
+
+## [Largely abandoned, sorry!]
+
 This repository aims to be a decent set of sentences for people looking to clone their own voices (e.g. using [Tacotron 2](https://github.com/nvidia/tacotron2)).
 
 Each set of 50 lines aims to fulfill the following criteria:
@@ -15,10 +17,12 @@ Additional text files will be provided for question and exclamation prompts, fol
 This repo uses the [g2p-en](https://pypi.org/project/g2p-en/) library to determine phoneme counts, in order to match [Uberduck](https://uberduck.ai/)'s phonetization.
 
 ## Other good prompt sets
+
 - (multilingual!) [Microsoft CustomVoice example scripts](https://github.com/Azure-Samples/Cognitive-Speech-TTS/tree/master/CustomVoice/script) (not all of the prompt lists are well-designed, e.g. [the en-US chat prompts](https://github.com/Azure-Samples/Cognitive-Speech-TTS/blob/master/CustomVoice/script/English%20(United%20States)_enUS/3000000001-3000000300_Chat.txt) only include /ʒ/ as part of the word "Indonesia")
 - [Rainbow Passage](https://dailycues.com/learn/iqpedia/pages/rainbow-passage/) and [Grandfather Passage](https://dailycues.com/learn/iqpedia/pages/grandfather-passage/) (phonetically complete)
 - [CMU Arctic prompt list](http://festvox.org/cmu_arctic/cmuarctic.data) (phonetically balanced, but only one sentence per line)
 - [MOCHA-TIMIT](https://data.cstr.ed.ac.uk/mocha/mocha-timit.txt) ("designed to include the main connected speech processes in English (eg. assimilations, weak forms ..)")
+- [TIMIT](https://catalog.ldc.upenn.edu/docs/LDC93S1/PROMPTS.TXT) (a heap of mostly-random sentences)
 - (multilingual!) [Common Voice sentences](https://github.com/common-voice/common-voice/blob/main/server/data/en/sentence-collector.txt) (not at all phonetically balanced, also quite short)
 - [LJSpeech transcript](https://github.com/NVIDIA/tacotron2/blob/master/filelists/ljs_audio_text_train_filelist.txt) (sentence fragments abound, which I personally think of as useful)
 - [Harvard sentences](https://www.cs.columbia.edu/~hgs/audio/harvard.html) (phonetically balanced, but only one sentence per line and they're all equal length)
